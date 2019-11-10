@@ -28,5 +28,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "repository": "https://github.com/vud531/live-chat-app-client.git",
+  "author": "Duc Vu <de.yd315@gmail.com>",
+  "license": "MIT"
 }

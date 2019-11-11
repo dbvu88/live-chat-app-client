@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import openSocket from "socket.io-client";
-
-dotenv.config();
+require("dotenv").config();
+// dotenv.config();
 const url = process.env.REACT_APP_SERVER_URL || "http://localhost:8000/";
 const socket = openSocket(url);
 // "https://ducchatapp.herokuapp.com/"

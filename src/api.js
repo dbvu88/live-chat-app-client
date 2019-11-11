@@ -1,6 +1,10 @@
+import dotenv from "dotenv";
 import openSocket from "socket.io-client";
-const socket = openSocket("https://ducchatapp.herokuapp.com/");
 
+dotenv.config();
+const url = process.env.SERVER_URL || "http://localhost:8000/";
+const socket = openSocket(url);
+// "https://ducchatapp.herokuapp.com/"
 const subscribeToTimer = cb => {
   console.log("subscribe to timer");
   socket.on("timer", cb);

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
 import { handleNewMessage, emitNewMessage } from "./api";
 
@@ -8,12 +7,8 @@ class App extends React.Component {
     super();
 
     console.log("constructed");
-    // subscribeToTimer(timestamp => {
-    //   this.setState({ timestamp });
-    // });
 
     handleNewMessage(newMessage => {
-      // console.log(newMessage);
       this.setState({
         conversation: [...this.state.conversation, newMessage]
       });
@@ -35,7 +30,6 @@ class App extends React.Component {
         {this.state.connected ? (
           <form
             onSubmit={e => {
-              console.log(e);
               e.preventDefault();
               emitNewMessage(
                 this.state.currentUser + ": " + this.state.newMessage

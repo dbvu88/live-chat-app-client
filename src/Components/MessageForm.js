@@ -6,35 +6,29 @@ const MessageForm = props => {
   const [newMessage, setNewMessage] = useState("");
   return (
     <Form
+      className="d-flex justify-content-between align-items-start"
       onSubmit={e => {
         e.preventDefault();
         emitNewMessage(props.currentUser + ": " + newMessage);
         setNewMessage("");
       }}
     >
-      <Form.Group as={Row}>
-        <Col sm={1}>
-          <Form.Label>Message: </Form.Label>
-        </Col>
-
-        <Col sm={10}>
-          <Form.Control
-            autoFocus
-            placeholder="start typing ..."
-            onChange={e => {
-              e.preventDefault();
-              setNewMessage(e.target.value);
-            }}
-            value={newMessage}
-          />
-        </Col>
-
-        <Col sm={1}>
-          <Button variant="primary" type="submit">
-            Send
-          </Button>
-        </Col>
-      </Form.Group>
+      <Form.Label htmlFor="message-input">Message: </Form.Label>
+      <Col>
+        <Form.Control
+          autoFocus
+          id="message-input"
+          placeholder="start typing ..."
+          onChange={e => {
+            e.preventDefault();
+            setNewMessage(e.target.value);
+          }}
+          value={newMessage}
+        />
+      </Col>
+      <Button variant="primary" type="submit">
+        Send
+      </Button>
     </Form>
   );
 };

@@ -5,15 +5,20 @@ import { Route } from "react-router-dom";
 
 const NicknameForm = props => {
   const [nickname, setNickname] = useState("");
-  const [warned, setWarned] = useState(false);
-
+  const [warning, setWarning] = useState("");
+  const { currentUsers } = props;
   return (
     <Form
       onSubmit={e => {
         e.preventDefault();
 
         if (!nickname) {
-          setWarned(!warned);
+          setWarning("nickname is required to join the room");
+          return null;
+        }
+
+        if (currentUsers.includes(nickname)) {
+          setWarning("please pick a different nickname");
           return null;
         }
         props.signIn(nickname);
@@ -27,8 +32,9 @@ const NicknameForm = props => {
             What is your nickname?
           </Form.Label>
         </Col>
-        <Col sm={5} className="p-0">
+        <Col sm={5}>
           <Form.Control
+            className="w-100"
             id="nickname-input"
             autoFocus
             placeholder="my nickname is ..."
@@ -38,14 +44,10 @@ const NicknameForm = props => {
             }}
             value={nickname}
           />
-          {warned && (
-            <Form.Text className="text-muted">
-              nickname is required to join the room
-            </Form.Text>
-          )}
+          {warning && <Form.Text className="text-muted">{warning}</Form.Text>}
         </Col>
-        <Col sm={2} className="p-0">
-          <Button variant="primary" type="submit">
+        <Col sm={2}>
+          <Button className="w-100" variant="primary" type="submit">
             Submit
           </Button>
         </Col>

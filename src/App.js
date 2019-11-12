@@ -48,9 +48,15 @@ class App extends React.Component {
       <Container className="vh-100">
         <Nav>
           <NavDropdown title="Online Chatters">
-            {currentUsers.map(item => (
-              <NavDropdown.Item>{item}</NavDropdown.Item>
-            ))}
+            {currentUsers.length ? (
+              currentUsers.map((item, index) => (
+                <NavDropdown.Item key={index}>{item}</NavDropdown.Item>
+              ))
+            ) : (
+              <NavDropdown.Item>
+                no online chatter at this time
+              </NavDropdown.Item>
+            )}
           </NavDropdown>
         </Nav>
         <div className="position-relative h-75">
@@ -80,7 +86,7 @@ class App extends React.Component {
           {connected ? (
             <MessageForm {...{ currentUser }} />
           ) : (
-            <NicknameForm signIn={this.signIn} />
+            <NicknameForm {...{ currentUsers, signIn: this.signIn }} />
           )}
         </Card>
       </Container>

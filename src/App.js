@@ -12,6 +12,7 @@ import {
 import { handleNewMessage, emitNewMessage } from "./api";
 import { Route } from "react-router-dom";
 import NicknameForm from "./Components/NicknameForm";
+import MessageForm from "./Components/MessageForm";
 
 class App extends React.Component {
   constructor(props) {
@@ -73,42 +74,7 @@ class App extends React.Component {
 
         <div className="mt-3">
           {this.state.connected ? (
-            <Form
-              onSubmit={e => {
-                e.preventDefault();
-                emitNewMessage(
-                  this.state.currentUser + ": " + this.state.newMessage
-                );
-                this.setState(state => {
-                  state.newMessage = "";
-                  return state;
-                });
-              }}
-            >
-              <Form.Group as={Row}>
-                <Col sm={2}>
-                  <Form.Label>Message: </Form.Label>
-                </Col>
-
-                <Col sm={8}>
-                  <Form.Control
-                    autoFocus
-                    placeholder="start typing ..."
-                    onChange={e => {
-                      e.preventDefault();
-                      this.setState({ newMessage: e.target.value });
-                    }}
-                    value={this.state.newMessage}
-                  />
-                </Col>
-
-                <Col sm={2}>
-                  <Button variant="primary" type="submit">
-                    Send
-                  </Button>
-                </Col>
-              </Form.Group>
-            </Form>
+            <MessageForm currentUser={this.state.currentUser} />
           ) : null}
         </div>
       </Container>

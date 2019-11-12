@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { emitNewMessage } from "../api";
-import { Route } from "react-router-dom";
 
 const MessageForm = props => {
   const [newMessage, setNewMessage] = useState("");
@@ -9,11 +8,8 @@ const MessageForm = props => {
     <Form
       onSubmit={e => {
         e.preventDefault();
-        emitNewMessage(this.state.currentUser + ": " + this.state.newMessage);
-        this.setState(state => {
-          state.newMessage = "";
-          return state;
-        });
+        emitNewMessage(props.currentUser + ": " + newMessage);
+        setNewMessage("");
       }}
     >
       <Form.Group as={Row}>
@@ -27,9 +23,9 @@ const MessageForm = props => {
             placeholder="start typing ..."
             onChange={e => {
               e.preventDefault();
-              this.setState({ newMessage: e.target.value });
+              setNewMessage(e.target.value);
             }}
-            value={this.state.newMessage}
+            value={newMessage}
           />
         </Col>
 

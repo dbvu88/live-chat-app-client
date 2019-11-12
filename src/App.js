@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Jumbotron,
-  Form,
-  Container,
-  ListGroup,
-  ListGroupItem,
-  Button,
-  Row,
-  Col
-} from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { handleNewMessage, emitNewMessage } from "./api";
 import { Route } from "react-router-dom";
 import NicknameForm from "./Components/NicknameForm";
 import MessageForm from "./Components/MessageForm";
+import Conversation from "./Components/Conversation";
 
 class App extends React.Component {
   constructor(props) {
@@ -55,28 +47,23 @@ class App extends React.Component {
 
   render() {
     // console.log(this.props);
+    const { conversation, currentUser, connected } = this.state;
     return (
-      <Container className="vh-100 pt-3">
-        {this.state.connected ? null : <NicknameForm signIn={this.signIn} />}
+      <Container className="vh-100">
         <div className="position-relative h-75">
-          <div className="overflow-auto h-100">
-            <ListGroup>
-              {this.state.conversation.map((message, index) => {
-                return (
-                  <ListGroupItem className="border-0" key={index}>
-                    <div id={index}>{message}</div>
-                  </ListGroupItem>
-                );
-              })}
-            </ListGroup>
-          </div>
+          {/* <div > */}
+          <Card body className="overflow-auto h-100">
+            <Conversation {...{ conversation }} />
+          </Card>
+          {/* </div> */}
         </div>
-
-        <div className="mt-3">
-          {this.state.connected ? (
-            <MessageForm currentUser={this.state.currentUser} />
-          ) : null}
-        </div>
+        <Card body>
+          {connected ? (
+            <MessageForm {...{ currentUser }} />
+          ) : (
+            <NicknameForm signIn={this.signIn} />
+          )}
+        </Card>
       </Container>
     );
   }

@@ -1,25 +1,30 @@
-import React, { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import React, { useState, useRef } from "react";
+import { Form, Button, Tooltip, Col, Overlay } from "react-bootstrap";
 import { emitNewMessage } from "../api";
 import { Route } from "react-router-dom";
 
 const NicknameForm = props => {
   const [nickname, setNickname] = useState("");
+  const [warned, setWarned] = useState(false);
+
   return (
     <Form
-      className="d-flex align-items-center"
       onSubmit={e => {
         e.preventDefault();
+
+        if (!nickname) {
+          setWarned(!warned);
+          return null;
+        }
         props.signIn(nickname);
         emitNewMessage(nickname + " just joined");
       }}
     >
-      <Form.Group as={Row} className="w-100">
-        <Col sm={5}>
-          <Form.Label>Welcome to the room, what is your nickname?</Form.Label>
-        </Col>
-        <Col sm={5}>
+      <div className="d-flex justify-content-between align-items-start">
+        <Form.Label htmlFor="nickname-input">What is your nickname?</Form.Label>
+        <Col>
           <Form.Control
+            id="nickname-input"
             autoFocus
             placeholder="my nickname is ..."
             onChange={e => {
@@ -28,13 +33,17 @@ const NicknameForm = props => {
             }}
             value={nickname}
           />
+          {warned && (
+            <Form.Text className="text-muted">
+              nickname is required to join the room
+            </Form.Text>
+          )}
         </Col>
-        <Col sm={2}>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Col>
-      </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </div>
     </Form>
   );
 };

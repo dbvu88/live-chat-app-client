@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Container, Col, Row } from "react-bootstrap";
+import { Card, Container, Col, Row, Nav, NavDropdown } from "react-bootstrap";
 import { handleNewMessage, handleUserActivity } from "./api";
 import NicknameForm from "./Components/NicknameForm";
 import MessageForm from "./Components/MessageForm";
@@ -46,28 +46,35 @@ class App extends React.Component {
     const { conversation, currentUser, currentUsers, connected } = this.state;
     return (
       <Container className="vh-100">
+        <Nav>
+          <NavDropdown title="Online Chatters">
+            {currentUsers.map(item => (
+              <NavDropdown.Item>{item}</NavDropdown.Item>
+            ))}
+          </NavDropdown>
+        </Nav>
         <div className="position-relative h-75">
-          <Row className="h-100">
-            <Col sm={8} className="h-100">
-              {/* <Card body className="overflow-auto h-100">
+          {/* <Row className="h-100"> */}
+          {/* <Col sm={8} className="h-100"> */}
+          {/* <Card body className="overflow-auto h-100">
                 <Conversation {...{ conversation }} />
               </Card> */}
-              <Card className="h-100">
-                <Card.Header>Messages</Card.Header>
-                <Card.Body className="overflow-auto">
-                  <Conversation {...{ conversation }} />
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col sm={4} className="h-100">
+          <Card className="h-100">
+            <Card.Header>Messages</Card.Header>
+            <Card.Body className="overflow-auto">
+              <Conversation {...{ conversation }} />
+            </Card.Body>
+          </Card>
+          {/* </Col> */}
+          {/* <Col sm={4} className="h-100">
               <Card className="overflow-auto h-100">
                 <Card.Header>Online Chatters</Card.Header>
                 <Card.Body>
                   <CurrentUsers {...{ currentUsers }} />
                 </Card.Body>
               </Card>
-            </Col>
-          </Row>
+            </Col> */}
+          {/* </Row> */}
         </div>
         <Card body>
           {connected ? (

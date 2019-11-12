@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Form, Button, Tooltip, Col, Overlay } from "react-bootstrap";
+import { Form, Button, Tooltip, Col, Row } from "react-bootstrap";
 import { emitNewMessage, emitNewChatter } from "../api";
 import { Route } from "react-router-dom";
 
@@ -21,9 +21,13 @@ const NicknameForm = props => {
         emitNewMessage(nickname + " just joined");
       }}
     >
-      <div className="d-flex justify-content-between align-items-start">
-        <Form.Label htmlFor="nickname-input">What is your nickname?</Form.Label>
-        <Col>
+      <Row>
+        <Col sm={5}>
+          <Form.Label htmlFor="nickname-input">
+            What is your nickname?
+          </Form.Label>
+        </Col>
+        <Col sm={5} className="p-0">
           <Form.Control
             id="nickname-input"
             autoFocus
@@ -40,11 +44,12 @@ const NicknameForm = props => {
             </Form.Text>
           )}
         </Col>
-
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </div>
+        <Col sm={2} className="p-0">
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        </Col>
+      </Row>
     </Form>
   );
 };

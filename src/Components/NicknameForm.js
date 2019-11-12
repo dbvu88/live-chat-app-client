@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Form, Button, Tooltip, Col, Overlay } from "react-bootstrap";
-import { emitNewMessage } from "../api";
+import { emitNewMessage, emitNewChatter } from "../api";
 import { Route } from "react-router-dom";
 
 const NicknameForm = props => {
@@ -17,6 +17,7 @@ const NicknameForm = props => {
           return null;
         }
         props.signIn(nickname);
+        emitNewChatter(nickname);
         emitNewMessage(nickname + " just joined");
       }}
     >

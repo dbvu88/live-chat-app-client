@@ -1,31 +1,20 @@
 import React from "react";
-import { Card, Container } from "react-bootstrap";
-import { handleNewMessage, emitNewMessage } from "./api";
-import { Route } from "react-router-dom";
+import { Card, Container, Col, Row } from "react-bootstrap";
+import { handleNewMessage, handleUserActivity } from "./api";
 import NicknameForm from "./Components/NicknameForm";
 import MessageForm from "./Components/MessageForm";
 import Conversation from "./Components/Conversation";
+import CurrentUsers from "./Components/CurrentUsers";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    console.log("constructed");
-
-    handleNewMessage(newMessage => {
-      let { conversation } = this.state;
-
-      // conversation =
-      //   conversation.length > 10 ? conversation.slice(1) : conversation;
-
-      this.setState({
-        conversation: [...conversation, newMessage]
-      });
-
-      const divOverflow = document.querySelector("div.overflow-auto");
-      divOverflow.scrollTo(0, divOverflow.scrollHeight);
-    });
-  }
+  state = {
+    currentUser: "",
+    connected: false,
+    timestamp: "starting timer",
+    conversation: [],
+    newMessage: "",
+    currentUsers: []
+  };
 
   signIn = nickname => {
     this.setState(state => {
@@ -35,27 +24,50 @@ class App extends React.Component {
     });
   };
 
-  state = {
-    currentUser: "",
-    connected: false,
-    timestamp: "starting timer",
-    conversation: [],
-    newMessage: ""
+  renderCurrentUsers = currentUsers => {
+    this.setState({ currentUsers });
   };
 
-  componentDidMount() {}
+  renderConversation = newMessage => {
+    let { conversation } = this.state;
+    this.setState({
+      conversation: [...conversation, newMessage]
+    });
+    const divOverflow = document.querySelector("div.overflow-auto");
+    divOverflow.scrollTo(0, divOverflow.scrollHeight);
+  };
+
+  componentDidMount() {
+    handleNewMessage(this.renderConversation);
+    handleUserActivity(this.renderCurrentUsers);
+  }
 
   render() {
-    // console.log(this.props);
-    const { conversation, currentUser, connected } = this.state;
+    const { conversation, currentUser, currentUsers, connected } = this.state;
     return (
       <Container className="vh-100">
         <div className="position-relative h-75">
-          {/* <div > */}
-          <Card body className="overflow-auto h-100">
-            <Conversation {...{ conversation }} />
-          </Card>
-          {/* </div> */}
+          <Row className="h-100">
+            <Col sm={8} className="h-100">
+              {/* <Card body className="overflow-auto h-100">
+                <Conversation {...{ conversation }} />
+              </Card> */}
+              <Card className="h-100">
+                <Card.Header>Messages</Card.Header>
+                <Card.Body className="overflow-auto">
+                  <Conversation {...{ conversation }} />
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col sm={4} className="h-100">
+              <Card className="overflow-auto h-100">
+                <Card.Header>Online Chatters</Card.Header>
+                <Card.Body>
+                  <CurrentUsers {...{ currentUsers }} />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </div>
         <Card body>
           {connected ? (

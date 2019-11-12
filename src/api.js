@@ -14,9 +14,25 @@ const handleNewMessage = cb => {
   socket.on("conversation", cb);
 };
 
+const handleUserActivity = cb => {
+  // console.log("subscribe to newMessage");
+
+  socket.on("currentUsers", cb);
+};
+
 const emitNewMessage = newMessage => {
   // console.log("on newMessage");
   socket.emit("newMessage", newMessage);
 };
 
-export { subscribeToTimer, handleNewMessage, emitNewMessage };
+const emitNewChatter = nickname => {
+  socket.emit("NewChatter", nickname);
+};
+
+export {
+  subscribeToTimer,
+  handleNewMessage,
+  emitNewMessage,
+  emitNewChatter,
+  handleUserActivity
+};

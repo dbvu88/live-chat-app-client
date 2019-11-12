@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { handleNewMessage, emitNewMessage } from "./api";
 import { Route } from "react-router-dom";
+import NicknameForm from "./Components/NicknameForm";
 
 class App extends React.Component {
   constructor(props) {
@@ -21,8 +22,8 @@ class App extends React.Component {
     handleNewMessage(newMessage => {
       let { conversation } = this.state;
 
-      conversation =
-        conversation.length > 10 ? conversation.slice(1) : conversation;
+      // conversation =
+      //   conversation.length > 10 ? conversation.slice(1) : conversation;
 
       this.setState({
         conversation: [...conversation, newMessage]
@@ -32,6 +33,14 @@ class App extends React.Component {
       divOverflow.scrollTo(0, divOverflow.scrollHeight);
     });
   }
+
+  signIn = nickname => {
+    this.setState(state => {
+      state.connected = !this.state.connected;
+      state.currentUser = nickname;
+      return state;
+    });
+  };
 
   state = {
     currentUser: "",
@@ -47,43 +56,7 @@ class App extends React.Component {
     // console.log(this.props);
     return (
       <Container className="vh-100 pt-3">
-        {this.state.connected ? null : (
-          <Form
-            className="d-flex align-items-center"
-            onSubmit={e => {
-              e.preventDefault();
-              this.setState(state => {
-                state.connected = true;
-                return state;
-              });
-              emitNewMessage(this.state.currentUser + " just joined");
-            }}
-          >
-            <Form.Group as={Row} className="w-100">
-              <Col sm={5}>
-                <Form.Label>
-                  Welcome to the room, what is your nickname?
-                </Form.Label>
-              </Col>
-              <Col sm={5}>
-                <Form.Control
-                  autoFocus
-                  placeholder="my nickname is ..."
-                  onChange={e => {
-                    e.preventDefault();
-                    this.setState({ currentUser: e.target.value });
-                  }}
-                  value={this.state.currentUser}
-                />
-              </Col>
-              <Col sm={2}>
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-              </Col>
-            </Form.Group>
-          </Form>
-        )}
+        {this.state.connected ? null : <NicknameForm signIn={this.signIn} />}
         <div className="position-relative h-75">
           <div className="overflow-auto h-100">
             <ListGroup>
@@ -113,11 +86,11 @@ class App extends React.Component {
               }}
             >
               <Form.Group as={Row}>
-                <Col sm={1}>
+                <Col sm={2}>
                   <Form.Label>Message: </Form.Label>
                 </Col>
 
-                <Col sm={10}>
+                <Col sm={8}>
                   <Form.Control
                     autoFocus
                     placeholder="start typing ..."
@@ -129,7 +102,7 @@ class App extends React.Component {
                   />
                 </Col>
 
-                <Col sm={1}>
+                <Col sm={2}>
                   <Button variant="primary" type="submit">
                     Send
                   </Button>

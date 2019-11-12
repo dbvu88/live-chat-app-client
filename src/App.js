@@ -1,10 +1,20 @@
 import React from "react";
-import { Jumbotron, Form, Container, ListGroup } from "react-bootstrap";
+import {
+  Jumbotron,
+  Form,
+  Container,
+  ListGroup,
+  ListGroupItem,
+  Button,
+  Row,
+  Col
+} from "react-bootstrap";
 import { handleNewMessage, emitNewMessage } from "./api";
+import { Route } from "react-router-dom";
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     console.log("constructed");
 
@@ -17,6 +27,9 @@ class App extends React.Component {
       this.setState({
         conversation: [...conversation, newMessage]
       });
+
+      const divOverflow = document.querySelector("div.overflow-auto");
+      divOverflow.scrollTo(0, divOverflow.scrollHeight);
     });
   }
 
@@ -28,59 +41,85 @@ class App extends React.Component {
     newMessage: ""
   };
 
+  componentDidMount() {}
+
   render() {
+    // console.log(this.props);
     return (
-      <Jumbotron className="vh-100 m-0">
-        <Container>
-          {this.state.connected ? null : (
+      <Container className="vh-100 pt-3">
+        {this.state.connected ? null : (
+          <Form
+            className="d-flex align-items-center"
+            onSubmit={e => {
+              e.preventDefault();
+              this.setState(state => {
+                state.connected = true;
+                return state;
+              });
+              emitNewMessage(this.state.currentUser + " just joined");
+            }}
+          >
+            <Form.Group as={Row} className="w-100">
+              <Col sm={5}>
+                <Form.Label>
+                  Welcome to the room, what is your nickname?
+                </Form.Label>
+              </Col>
+              <Col sm={5}>
+                <Form.Control
+                  autoFocus
+                  placeholder="my nickname is ..."
+                  onChange={e => {
+                    e.preventDefault();
+                    this.setState({ currentUser: e.target.value });
+                  }}
+                  value={this.state.currentUser}
+                />
+              </Col>
+              <Col sm={2}>
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        )}
+        <div className="position-relative h-75">
+          <div className="overflow-auto h-100">
+            <ListGroup>
+              {this.state.conversation.map((message, index) => {
+                return (
+                  <ListGroupItem className="border-0" key={index}>
+                    <div id={index}>{message}</div>
+                  </ListGroupItem>
+                );
+              })}
+            </ListGroup>
+          </div>
+        </div>
+
+        <div className="mt-3">
+          {this.state.connected ? (
             <Form
               onSubmit={e => {
                 e.preventDefault();
+                emitNewMessage(
+                  this.state.currentUser + ": " + this.state.newMessage
+                );
                 this.setState(state => {
-                  state.connected = true;
+                  state.newMessage = "";
                   return state;
                 });
-                emitNewMessage(this.state.currentUser + " just joined");
               }}
             >
-              <Form.Label>
-                Welcome to the room, what is your nickname?
-              </Form.Label>
-              <Form.Control
-                placeholder="my nickname is ..."
-                onChange={e => {
-                  e.preventDefault();
-                  this.setState({ currentUser: e.target.value });
-                }}
-                value={this.state.currentUser}
-              />
-            </Form>
-          )}
-          <h3>Chatroom</h3>
-          <Container className="overflow-auto h-80">
-            <ListGroup>
-              {this.state.conversation.map((message, index) => {
-                return <ListGroup.Item key={index}>{message}</ListGroup.Item>;
-              })}
-            </ListGroup>
-          </Container>
-          <Container className="fixed-bottom">
-            {this.state.connected ? (
-              <Form
-                onSubmit={e => {
-                  e.preventDefault();
-                  emitNewMessage(
-                    this.state.currentUser + ": " + this.state.newMessage
-                  );
-                  this.setState(state => {
-                    state.newMessage = "";
-                    return state;
-                  });
-                }}
-              >
-                <Form.Group>
+              <Form.Group as={Row}>
+                <Col sm={1}>
                   <Form.Label>Message: </Form.Label>
+                </Col>
+
+                <Col sm={10}>
                   <Form.Control
+                    autoFocus
                     placeholder="start typing ..."
                     onChange={e => {
                       e.preventDefault();
@@ -88,12 +127,18 @@ class App extends React.Component {
                     }}
                     value={this.state.newMessage}
                   />
-                </Form.Group>
-              </Form>
-            ) : null}
-          </Container>
-        </Container>
-      </Jumbotron>
+                </Col>
+
+                <Col sm={1}>
+                  <Button variant="primary" type="submit">
+                    Send
+                  </Button>
+                </Col>
+              </Form.Group>
+            </Form>
+          ) : null}
+        </div>
+      </Container>
     );
   }
 }
